@@ -1,0 +1,22 @@
+{
+  "name": "quadControl",
+  "authors": [
+    "Momme Jürgensen <momme@juergensen.me>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "feathers-client": "^1.4.0",
+    "socket.io-client": "^1.4.8"
+  }
+}
