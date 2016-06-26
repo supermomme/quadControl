@@ -6,7 +6,14 @@
     <title>Feathers Chat</title>
   </head>
   <body>
-    <div id="controls"></div>
+    <div id="controls">
+      <div>1. Elev</div>
+      <div>2. Aile</div>
+      <div>3. Thro</div>
+      <div>4. Rudd</div>
+      <div>5. aux1</div>
+      <div>6. aux2</div>
+    </div>
     <script src="bower_components/socket.io-client/socket.io.js"></script>
     <script src="bower_components/feathers-client/dist/feathers.js"></script>
     <script type="text/javascript">
@@ -33,16 +40,22 @@
       let controlsElement = document.getElementById('controls');
       for (var i = 0; i < controls.length; i++) {
         let control = controls[i];
-        let itemELement = document.createElement('input')
+        let itemDivELement = document.createElement('div');
+        let itemELement = document.createElement('input');
+        itemELement.type = 'range';
         itemELement.value = control.value;
-        itemELement.type = 'number';
-        itemELement.addEventListener('keyup', () => {
+        itemELement.min = '0'; itemELement.max = '100';
+        itemELement.addEventListener('input', () => {
+          console.log(itemELement.value);
           controlService.patch(control.id, {value:itemELement.value})
         })
         controlService.on('patched',(res) => {
           if(res.id == control.id) itemELement.value = res.value;
         })
-        controlsElement.appendChild(itemELement);
+        itemDivELement.appendChild(itemELement);
+        console.log(control.type);
+        controlsElement.appendChild(itemDivELement);
+
       }
     })
 
