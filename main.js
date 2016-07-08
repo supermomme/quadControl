@@ -2,61 +2,35 @@
 
 
 var socket = io('http://localhost:3030');
-var app = feathers()
-.configure(feathers.hooks())
-.configure(feathers.socketio(socket))
-.configure(feathers.authentication({ storage: window.localStorage }));
-var userService = app.service('users');
-var controlService = app.service('controls')
 
 
-function getThrottle() {
-  return controlService.find({query:{type:"thro"}}).then((res) => res.data[0]);
-}
-
-
-app.authenticate({
-  type: 'local',
-  'email': 'momme@juergensen.me',
-  'password': 'test'
-}).then(function(result){
-  return controlService.find()
-  .then((res) => res.data)
-  .then((controls) => {
-    let controlsElement = document.getElementById('controls');
-    for (var i = 0; i < controls.length; i++) {
-      let control = controls[i];
-      let itemDivELement = document.createElement('div');
-      let itemELement = document.createElement('input');
-      itemELement.type = 'range';
-      itemELement.value = control.value;
-      itemELement.min = '0'; itemELement.max = '100';
-      itemELement.addEventListener('input', () => {
-        console.log(itemELement.value);
-        controlService.patch(control.id, {value:itemELement.value})
-      })
-      controlService.on('patched',(res) => {
-        if(res.id == control.id) itemELement.value = res.value;
-      })
-      itemDivELement.appendChild(itemELement);
-      console.log(control.type);
-      controlsElement.appendChild(itemDivELement);
-
-    }
+document.getElementById('controls').addEventListener('input', () => {
+  socket.emit('control', {
+    changerId:socket.id,
+    elev:document.getElementById('elev').value,
+    aile:document.getElementById('aile').value,
+    thro:document.getElementById('thro').value,
+    rudd:document.getElementById('rudd').value,
+    aux1:document.getElementById('aux1').value,
+    aux2:document.getElementById('aux2').value,
   })
-
-
-}).catch(function(error){
-  console.error('Error authenticating!', error);
-});
-
-/*
-userService.create({
-email:"momme@juergensen.me",
-password:"test"
 })
-.then((res) => console.log(res))
-.catch((err) => console.log(err))*/
+
+socket.on('control', (data) => {
+  console.log("Ownerid: ", data.changerId);
+  if (socket.id != data.changerId) {
+    document.getElementById('elev').value = data.elev
+    document.getElementById('aile').value = data.aile
+    document.getElementById('thro').value = data.thro
+    document.getElementById('rudd').value = data.rudd
+    document.getElementById('aux1').value = data.aux1
+    document.getElementById('aux2').value = data.aux2
+  }
+})
+
+
+
+
 
 
 //GAMEPAD START
