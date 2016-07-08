@@ -1,7 +1,7 @@
 'use strict';
 
 
-var socket = io('http://localhost:3030');
+var socket = io('http://192.168.178.40:3030');
 
 
 document.getElementById('controls').addEventListener('input', () => {
@@ -17,7 +17,6 @@ document.getElementById('controls').addEventListener('input', () => {
 })
 
 socket.on('control', (data) => {
-  console.log("Ownerid: ", data.changerId);
   if (socket.id != data.changerId) {
     document.getElementById('elev').value = data.elev
     document.getElementById('aile').value = data.aile
@@ -26,6 +25,12 @@ socket.on('control', (data) => {
     document.getElementById('aux1').value = data.aux1
     document.getElementById('aux2').value = data.aux2
   }
+  document.getElementById('elevDisplay').innerHTML = data.elev
+  document.getElementById('aileDisplay').innerHTML = data.aile
+  document.getElementById('throDisplay').innerHTML = data.thro
+  document.getElementById('ruddDisplay').innerHTML = data.rudd
+  document.getElementById('aux1Display').innerHTML = data.aux1
+  document.getElementById('aux2Display').innerHTML = data.aux2
 })
 
 
